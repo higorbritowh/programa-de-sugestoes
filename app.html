@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programa de Sugestões</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            padding-top: env(safe-area-inset-top);
+        }
+        .mobile-view-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            background-color: #f0f2f5;
+            padding: 16px;
+        }
+        .mobile-screen {
+            width: 100%;
+            max-width: 420px;
+            min-height: calc(100vh - 32px);
+            max-height: 800px;
+            border: 1px solid #d1d5db;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            overflow-y: auto;
+        }
+        .custom-button {
+            background-color: #4A90E2;
+            color: white;
+            font-weight: 600;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+            border-radius: 9999px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+        }
+        .custom-button:hover {
+            background-color: #357ABD;
+            transform: translateY(-1px);
+        }
+        .custom-button:active {
+            transform: translateY(0px);
+            background-color: #2A6496;
+        }
+        .custom-button:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.5);
+        }
+
+        /* Animação da Logo */
+        @keyframes floatAnimation {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+        .animated-logo {
+            animation: floatAnimation 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="mobile-view-container">
+
+    <div class="mobile-screen bg-white w-full rounded-xl p-6 flex flex-col">
+        <header class="text-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">Programa de Sugestões</h1>
+        </header>
+
+        <div class="flex justify-center items-center py-5">
+            <img src="https://github.com/higorbritowh/programa-de-sugestoes/blob/main/logo_PD.png?raw=true"
+                 alt="Logo Programa de Sugestões - Astronauta com Foguete"
+                 class="h-32 w-32 object-contain animated-logo"
+                 onerror="this.onerror=null; this.src='https://placehold.co/128x128/E2E8F0/4A5568?text=Logo+PD'; this.alt='Logo Alternativa Programa de Sugestões'">
+        </div>
+
+        <nav class="flex flex-col space-y-5 mt-4 mb-6">
+            <button class="custom-button">
+                Nova Sugestão
+            </button>
+            <button class="custom-button">
+                Operador 360°
+            </button>
+            <button class="custom-button">
+                Cadastro de Senha
+            </button>
+            <button class="custom-button">
+                Aprovações
+            </button>
+        </nav>
+
+        <div class="flex-grow"></div>
+
+        <footer class="flex justify-center items-center pt-8 pb-4">
+            <img src="https://placehold.co/90x45/E2E8F0/4A5568?text=WCM"
+                 alt="Logo WCM"
+                 class="h-12 object-contain"
+                 onerror="this.onerror=null; this.src='https://placehold.co/90x45/FFFFFF/CC0000?text=WCM+Error'; this.alt='Logo WCM Alternativa'">
+        </footer>
+    </div>
+
+</body>
+</html>
