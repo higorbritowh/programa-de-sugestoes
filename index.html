@@ -10,53 +10,53 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            padding-top: env(safe-area-inset-top);
+            padding-top: env(safe-area-inset-top); /* Adicionado para iOS safe area */
         }
         .mobile-view-container {
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: flex-start; /* Alterado para flex-start para melhor visualização em telas menores */
             min-height: 100vh;
-            background-color: #f0f2f5;
-            padding: 16px;
+            background-color: #f0f2f5; /* Um cinza claro para o fundo */
+            padding: 16px; /* Adiciona padding nas laterais */
         }
         .mobile-screen {
             width: 100%;
-            max-width: 420px;
-            min-height: calc(100vh - 32px);
-            max-height: 800px;
-            border: 1px solid #d1d5db;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-            overflow-y: auto;
+            max-width: 420px; /* Largura máxima para simular um celular */
+            min-height: calc(100vh - 32px); /* Considera o padding do container */
+            max-height: 800px; /* Altura máxima */
+            border: 1px solid #d1d5db; /* Borda sutil */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); /* Sombra mais pronunciada */
+            overflow-y: auto; /* Scroll se o conteúdo exceder */
             position: relative; /* Para posicionar o overlay de loading corretamente */
         }
         .custom-button-link, .custom-button {
             display: block;
             text-align: center;
-            background-color: #4A90E2;
+            background-color: #4A90E2; /* Azul chamativo */
             color: white;
-            font-weight: 600;
-            padding-top: 1rem;
-            padding-bottom: 1rem;
-            padding-left: 1.5rem;
-            padding-right: 1.5rem;
-            border-radius: 9999px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            font-weight: 600; /* semibold */
+            padding-top: 1rem; /* py-4 */
+            padding-bottom: 1rem; /* py-4 */
+            padding-left: 1.5rem; /* px-6 */
+            padding-right: 1.5rem; /* px-6 */
+            border-radius: 9999px; /* rounded-full */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
             transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
             text-decoration: none;
             cursor: pointer; /* Mudar cursor para indicar clicável */
         }
         .custom-button-link:hover, .custom-button:hover {
-            background-color: #357ABD;
-            transform: translateY(-1px);
+            background-color: #357ABD; /* Azul um pouco mais escuro no hover */
+            transform: translateY(-1px); /* Leve efeito de elevação */
         }
         .custom-button-link:active, .custom-button:active {
-            transform: translateY(0px);
-            background-color: #2A6496;
+            transform: translateY(0px); /* Remove a elevação ao clicar */
+            background-color: #2A6496; /* Azul ainda mais escuro no active */
         }
         .custom-button-link:focus, .custom-button:focus {
             outline: none;
-            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.5);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.5); /* Anel de foco azul claro */
         }
 
         @keyframes floatAnimation {
@@ -83,6 +83,7 @@
             justify-content: center;
             align-items: center;
             z-index: 50; /* Para ficar sobre outros elementos */
+            border-radius: 0.75rem; /* rounded-xl, para acompanhar o mobile-screen */
         }
     </style>
 </head>
@@ -130,22 +131,69 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const novaSugestaoButton = document.getElementById('novaSugestaoLink');
-            const loadingOverlay = document.getElementById('loading-overlay');
+    document.addEventListener('DOMContentLoaded', function() {
+        const novaSugestaoButton = document.getElementById('novaSugestaoLink');
+        const loadingOverlay = document.getElementById('loading-overlay');
 
-            if (novaSugestaoButton && loadingOverlay) {
-                novaSugestaoButton.addEventListener('click', function(event) {
-                    event.preventDefault(); // Impede a navegação imediata
+        if (novaSugestaoButton && loadingOverlay) {
+            // Tornamos a função de callback do evento 'click' em uma função async
+            novaSugestaoButton.addEventListener('click', async function(event) {
+                event.preventDefault(); // Impede a navegação imediata para nova_sugestao.html
 
-                    loadingOverlay.style.display = 'flex'; // Mostra a animação de loading
+                loadingOverlay.style.display = 'flex'; // Mostra a animação de loading
 
+                try {
+                    // --- CHAMADA PARA A NETLIFY FUNCTION ---
+                    // Substitua '/.netlify/functions/nomeDaSuaFuncao' pelo caminho real da sua Netlify Function.
+                    // Exemplo: se sua função se chama 'processarNovaSugestao.js', o caminho será '/.netlify/functions/processarNovaSugestao'
+                    const response = await fetch('/.netlify/functions/nomeDaSuaFuncao', {
+                        method: 'POST', // Ou 'GET', dependendo do que sua função espera. POST é comum para criar/iniciar algo.
+                        headers: {
+                            'Content-Type': 'application/json',
+                            // Poderia adicionar outros headers se necessário (ex: Authorization)
+                        },
+                        // Se você precisar enviar algum dado inicial para a função a partir desta página:
+                        // body: JSON.stringify({ acao: "iniciar_nova_sugestao", timestamp: new Date().toISOString() }),
+                    });
+
+                    // Verifica se a resposta da função foi bem-sucedida (status HTTP 2xx)
+                    if (!response.ok) {
+                        // Se a resposta da função indicar um erro (ex: status 400, 500)
+                        const errorData = await response.text(); // Tenta pegar detalhes do erro como texto
+                        // Lança um erro para ser pego pelo bloco catch
+                        throw new Error(`Erro da Netlify Function: ${response.status} ${response.statusText}. Detalhes: ${errorData}`);
+                    }
+
+                    // Se a função foi chamada com sucesso, você pode processar a resposta aqui, se houver
+                    // const data = await response.json(); // Se sua função retorna JSON
+                    // console.log('Resposta da Netlify Function:', data);
+
+                    // --- REDIRECIONAMENTO APÓS SUCESSO ---
+                    // Adiciona um pequeno delay para que o usuário veja a animação de loading brevemente,
+                    // mesmo que a função seja muito rápida. Ajuste o tempo (em milissegundos) conforme sua necessidade.
                     setTimeout(function() {
-                        window.location.href = novaSugestaoButton.href; // Redireciona após 4 segundos
-                    }, 4000);
-                });
-            }
-        });
+                        window.location.href = novaSugestaoButton.href; // Redireciona para nova_sugestao.html
+                        // Não é estritamente necessário esconder o loadingOverlay aqui, pois a página vai mudar,
+                        // mas pode ser feito se o delay for muito longo e você quiser dar feedback.
+                    }, 500); // Ex: 0.5 segundos de delay. Se não quiser delay, pode redirecionar direto.
+
+                } catch (error) {
+                    // Se ocorrer qualquer erro durante a chamada fetch ou no processamento
+                    console.error('Erro ao interagir com a Netlify Function:', error);
+                    
+                    // Informar o usuário sobre o erro de forma amigável.
+                    // Evite alert() em produção final, prefira um modal ou mensagem na UI.
+                    // Para este exemplo, um alert é usado para simplicidade.
+                    alert('Ocorreu um problema ao iniciar o processo de sugestão. Por favor, tente novamente mais tarde.');
+                    
+                    loadingOverlay.style.display = 'none'; // Esconde o loading em caso de erro para o usuário não ficar preso
+                }
+            });
+        } else {
+            if (!novaSugestaoButton) console.error("Elemento com ID 'novaSugestaoLink' não encontrado.");
+            if (!loadingOverlay) console.error("Elemento com ID 'loading-overlay' não encontrado.");
+        }
+    });
     </script>
 
 </body>
